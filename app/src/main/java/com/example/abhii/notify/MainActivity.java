@@ -36,19 +36,7 @@ public class MainActivity extends AppCompatActivity
 
 		ref = database.getReference("/notes");
 
-		ref.addListenerForSingleValueEvent(new ValueEventListener() {
-			@Override
-			public void onDataChange(DataSnapshot dataSnapshot)
-			{
-				Log.v("TAG",dataSnapshot.toString());
-			}
 
-			@Override
-			public void onCancelled(DatabaseError databaseError)
-			{
-
-			}
-		});
 
 		rv.setLayoutManager(new LinearLayoutManager(this));
 		init();
@@ -60,15 +48,37 @@ public class MainActivity extends AppCompatActivity
 
 	public void init()
 	{
-		notes.add(new Note("Happy Birthday", "To you"));
-		notes.add(new Note("Happy Birthday", "To you"));
-		notes.add(new Note("Happy Birthday", "To you"));
-		notes.add(new Note("Happy Birthday", "To you"));
-		notes.add(new Note("Happy Birthday", "To you"));
-		notes.add(new Note("Happy Birthday", "To you"));
-		notes.add(new Note("Happy Birthday", "To you"));
-		notes.add(new Note("Happy Birthday", "To you"));
-		notes.add(new Note("Happy Birthday", "To you"));
+		/*notes.add(new Note("Title 1", "Content 1"));
+		notes.add(new Note("Title 2", "Content 2"));
+		notes.add(new Note("Title 3", "Content 3"));
+		notes.add(new Note("Title 4", "Content 4"));
+		notes.add(new Note("Title 5", "Content 5"));
+		notes.add(new Note("Title 6", "Content 6"));
+		notes.add(new Note("Title 7", "Content 7"));
+		notes.add(new Note("Title 8", "Content 8"));
+		notes.add(new Note("Title 9", "Content 9"));*/
+
+		ref = database.getReference("/notes");
+
+		ref.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot dataSnapshot)
+			{
+				for (DataSnapshot itemSnapshot:dataSnapshot.getChildren())
+				{
+					Log.v("TAG",itemSnapshot.toString());
+					Note note = itemSnapshot.getValue(Note.class);
+					notes.add(note);
+					adapter.notifyDataSetChanged();
+				}
+			}
+
+			@Override
+			public void onCancelled(DatabaseError databaseError)
+			{
+
+			}
+		});
 
 	}
 }
